@@ -1,42 +1,41 @@
-<?php 
+<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'phpmailer/Exception.php';
+require 'phpmailer/PHPMailer.php';
+require 'phpmailer/SMTP.php';
 
 $name = $_POST['name'];
 $email = $_POST['email'];
 
-require_once('phpmailer/PHPMailerAutoload.php');
-$mail = new PHPMailer;
-$mail->CharSet = 'utf-8';
+$mail = new PHPMailer(true);
 
-// $mail->SMTPDebug = 3;                               // Enable verbose debug output
+try {
+    $mail->CharSet = 'utf-8';
 
-$mail->isSMTP();                                      // Set mailer to use SMTP
-$mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
-$mail->SMTPAuth = true;                               // Enable SMTP authentication
-$mail->Username = 'jobfrontend7@gmail.com';                 // Наш логин
-$mail->Password = '123456789Serik17';                           // Наш пароль от ящика
-$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-$mail->Port = 465;                                    // TCP port to connect to
- 
-$mail->setFrom('jobfrontend7@gmail.com', 'CV');   // От кого письмо 
-$mail->addAddress('postfront6@gmail.com');     // Add a recipient
-//$mail->addAddress('ellen@example.com');               // Name is optional
-//$mail->addReplyTo('info@example.com', 'Information');
-//$mail->addCC('cc@example.com');
-//$mail->addBCC('bcc@example.com');
-//$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-//$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
-$mail->isHTML(true);                                  // Set email format to HTML
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'jobfrontend7@gmail.com';
+    $mail->Password = '123456789Serik17';
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port = 465;
 
-$mail->Subject = 'Данные';
-$mail->Body    = '
-		Пользователь оставил данные <br> 
-	Имя: ' . $name . ' <br>
-	E-mail: ' . $email . '';
+    $mail->setFrom('jobfrontend7@gmail.com', 'CV');
+    $mail->addAddress('postfront6@gmail.com');
+    $mail->addReplyTo('jobfrontend7@gmail.com', 'Information');
 
-if(!$mail->send()) {
-    return false;
-} else {
-    return true;
+    $mail->isHTML(true);
+    $mail->Subject = 'Данные';
+    $mail->Body = '
+        Пользователь оставил данные <br> 
+        Имя: ' . $name . ' <br>
+        E-mail: ' . $email . '';
+
+    $mail->send();
+    echo 'Письмо успешно отправлено';
+} catch (Exception $e) {
+    echo "Ошибка при отправке письма: {$mail->ErrorInfo}";
 }
-
 ?>
